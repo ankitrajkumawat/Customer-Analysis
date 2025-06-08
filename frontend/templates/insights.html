@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Insights - Customer Churn Analysis{% endblock %}
+
+{% block extra_css %}
+<style>
+    .insight-section {
+        margin-bottom: 3rem;
+    }
+    .insight-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+    .plot-container img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Customer Churn Insights</h1>
+    
+    <!-- Churn Distribution -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Churn Distribution</h2>
+                <div id="churnDistribution" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/churn_distribution.png') }}" alt="Churn Distribution Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>The distribution of customer churn shows that approximately 26.5% of customers have churned, while 73.5% remain active. This significant churn rate highlights the importance of implementing effective retention strategies. The imbalance in the dataset also suggests the need for careful model training to avoid bias towards the majority class.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tenure vs Churn -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Customer Tenure Analysis</h2>
+                <div id="tenureAnalysis" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/tenure_vs_churn.png') }}" alt="Tenure vs Churn Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>Customer tenure analysis reveals a strong correlation between the length of customer relationship and churn probability. Newer customers (0-12 months) show higher churn rates, while long-term customers (24+ months) demonstrate greater loyalty. This insight suggests that focusing on customer retention during the first year of service is crucial for long-term success.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Charges Impact -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Monthly Charges Impact</h2>
+                <div id="monthlyCharges" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/monthly_charges_impact.png') }}" alt="Monthly Charges Impact Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>The analysis of monthly charges shows that customers with higher monthly bills are more likely to churn. This suggests that pricing strategy and value perception play crucial roles in customer retention. Businesses should focus on demonstrating value for money and potentially implementing tiered pricing strategies to better serve different customer segments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Impact -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Service Bundle Analysis</h2>
+                <div id="serviceImpact" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/service_impact.png') }}" alt="Service Impact Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>Service bundle analysis reveals that customers with multiple services (internet, phone, streaming) are less likely to churn compared to those with single services. This highlights the effectiveness of service bundling as a retention strategy. The data suggests that offering complementary services can increase customer stickiness and reduce churn probability.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contract Type Analysis -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Contract Type Impact</h2>
+                <div id="contractAnalysis" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/contract_type_analysis.png') }}" alt="Contract Type Analysis Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>Contract type analysis shows that customers with month-to-month contracts have significantly higher churn rates compared to those with long-term contracts. This suggests that contract length is a strong predictor of customer loyalty. Businesses might consider offering incentives for longer contract commitments while ensuring the value proposition remains attractive.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Method Analysis -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Payment Method Preferences</h2>
+                <div id="paymentAnalysis" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/payment_method_analysis.png') }}" alt="Payment Method Analysis Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>Payment method analysis reveals interesting patterns in customer behavior. Customers using electronic payment methods show different churn patterns compared to those using traditional methods. This insight can help businesses optimize their payment processing systems and potentially reduce friction in the billing process.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Internet Service Analysis -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Internet Service Impact</h2>
+                <div id="internetAnalysis" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/internet_service_analysis.png') }}" alt="Internet Service Impact Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>Internet service analysis shows that customers with fiber optic service have higher churn rates compared to those with DSL or no internet service. This suggests potential issues with service quality or customer satisfaction with fiber optic offerings. Businesses should investigate and address any service quality concerns to improve retention.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Demographics -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Demographic Patterns</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="genderAnalysis" class="plot-container">
+                            <img src="{{ url_for('static', filename='images/eda/gender_analysis.png') }}" alt="Gender Analysis Chart">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="seniorCitizenAnalysis" class="plot-container">
+                            <img src="{{ url_for('static', filename='images/eda/senior_citizen_analysis.png') }}" alt="Senior Citizen Analysis Chart">
+                        </div>
+                    </div>
+                </div>
+                <div class="insight-text mt-3">
+                    <p>Demographic analysis reveals that age and gender have varying impacts on churn behavior. While gender shows minimal correlation with churn, age groups demonstrate different patterns of loyalty. This insight can help businesses tailor their retention strategies to specific demographic segments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Services Impact -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Additional Services Effect</h2>
+                <div id="additionalServices" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/additional_services_impact.png') }}" alt="Additional Services Impact Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>The analysis of additional services (like online security, tech support, etc.) shows that customers with more add-on services are less likely to churn. This suggests that service bundling and value-added features can be effective retention tools. Businesses should consider promoting these additional services to increase customer engagement and loyalty.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall Churn Factors -->
+    <div class="insight-section">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Key Churn Factors</h2>
+                <div id="churnFactors" class="plot-container">
+                    <img src="{{ url_for('static', filename='images/eda/overall_churn_factors.png') }}" alt="Overall Churn Factors Chart">
+                </div>
+                <div class="insight-text mt-3">
+                    <p>The comprehensive analysis of churn factors reveals that contract type, internet service type, and monthly charges are the strongest predictors of customer churn. This insight can guide businesses in developing targeted retention strategies and optimizing their service offerings to reduce churn rates.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %} 

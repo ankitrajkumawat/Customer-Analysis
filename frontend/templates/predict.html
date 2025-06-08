@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}Predict Churn - Customer Churn Prediction{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prediction-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .form-section {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    .prediction-result {
+        display: none;
+        margin-top: 2rem;
+        padding: 2rem;
+        border-radius: 10px;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .prediction-result.show {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+    .confidence-meter {
+        height: 20px;
+        background: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 1rem 0;
+    }
+    .confidence-level {
+        height: 100%;
+        background: linear-gradient(90deg, #28a745, #ffc107);
+        transition: width 0.5s ease;
+    }
+    .model-accuracy {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Customer Churn Prediction</h1>
+    
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="prediction-form">
+                <form id="churnPredictionForm">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="gender">Gender</label>
+                                    <select class="form-control" id="gender" name="gender" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="seniorCitizen">Senior Citizen</label>
+                                    <select class="form-control" id="seniorCitizen" name="SeniorCitizen" required>
+                                        <option value="">Select</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="partner">Partner</label>
+                                    <select class="form-control" id="partner" name="Partner" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="dependents">Dependents</label>
+                                    <select class="form-control" id="dependents" name="Dependents" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service Information -->
+                    <div class="form-section">
+                        <h3>Service Information</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tenure">Tenure (months)</label>
+                                    <input type="number" class="form-control" id="tenure" name="tenure" min="0" max="72" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="phoneService">Phone Service</label>
+                                    <select class="form-control" id="phoneService" name="PhoneService" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="multipleLines">Multiple Lines</label>
+                                    <select class="form-control" id="multipleLines" name="MultipleLines" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="No phone service">No phone service</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="internetService">Internet Service</label>
+                                    <select class="form-control" id="internetService" name="InternetService" required>
+                                        <option value="">Select</option>
+                                        <option value="DSL">DSL</option>
+                                        <option value="Fiber optic">Fiber optic</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Services -->
+                    <div class="form-section">
+                        <h3>Additional Services</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="onlineSecurity">Online Security</label>
+                                    <select class="form-control" id="onlineSecurity" name="OnlineSecurity" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="No internet service">No internet service</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="onlineBackup">Online Backup</label>
+                                    <select class="form-control" id="onlineBackup" name="OnlineBackup" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="No internet service">No internet service</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="deviceProtection">Device Protection</label>
+                                    <select class="form-control" id="deviceProtection" name="DeviceProtection" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="No internet service">No internet service</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="techSupport">Tech Support</label>
+                                    <select class="form-control" id="techSupport" name="TechSupport" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="No internet service">No internet service</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="streamingTV">Streaming TV</label>
+                                    <select class="form-control" id="streamingTV" name="StreamingTV" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="No internet service">No internet service</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="streamingMovies">Streaming Movies</label>
+                                    <select class="form-control" id="streamingMovies" name="StreamingMovies" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="No internet service">No internet service</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contract & Billing -->
+                    <div class="form-section">
+                        <h3>Contract & Billing</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="contract">Contract</label>
+                                    <select class="form-control" id="contract" name="Contract" required>
+                                        <option value="">Select</option>
+                                        <option value="Month-to-month">Month-to-month</option>
+                                        <option value="One year">One year</option>
+                                        <option value="Two year">Two year</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="paperlessBilling">Paperless Billing</label>
+                                    <select class="form-control" id="paperlessBilling" name="PaperlessBilling" required>
+                                        <option value="">Select</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="paymentMethod">Payment Method</label>
+                                    <select class="form-control" id="paymentMethod" name="PaymentMethod" required>
+                                        <option value="">Select</option>
+                                        <option value="Electronic check">Electronic check</option>
+                                        <option value="Mailed check">Mailed check</option>
+                                        <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+                                        <option value="Credit card (automatic)">Credit card (automatic)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="monthlyCharges">Monthly Charges ($)</label>
+                                    <input type="number" class="form-control" id="monthlyCharges" name="MonthlyCharges" min="0" step="0.01" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Predict Churn</button>
+                    </div>
+                </form>
+
+                <!-- Prediction Results -->
+                <div id="predictionResult" class="prediction-result">
+                    <h3 class="text-center mb-4">Prediction Results</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h4 class="card-title">SVM Model</h4>
+                                    <p class="model-accuracy">Model Accuracy: <span id="svmAccuracy">--</span>%</p>
+                                    <div class="confidence-meter">
+                                        <div id="svmConfidence" class="confidence-level" style="width: 0%"></div>
+                                    </div>
+                                    <p class="mt-2">Confidence: <span id="svmConfidenceText">--</span>%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h4 class="card-title">LSTM Model</h4>
+                                    <p class="model-accuracy">Model Accuracy: <span id="lstmAccuracy">--</span>%</p>
+                                    <div class="confidence-meter">
+                                        <div id="lstmConfidence" class="confidence-level" style="width: 0%"></div>
+                                    </div>
+                                    <p class="mt-2">Confidence: <span id="lstmConfidenceText">--</span>%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-body text-center">
+                            <h4>Final Prediction</h4>
+                            <div id="finalPrediction" class="display-4 mb-3"></div>
+                            <div class="confidence-meter mx-auto" style="max-width: 300px;">
+                                <div id="ensembleConfidence" class="confidence-level" style="width: 0%"></div>
+                            </div>
+                            <p class="mt-2">Ensemble Confidence: <span id="ensembleConfidenceText">--</span>%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load model accuracies
+    fetch('/api/model-info')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('svmAccuracy').textContent = (data.svm_accuracy * 100).toFixed(1);
+            document.getElementById('lstmAccuracy').textContent = (data.lstm_accuracy * 100).toFixed(1);
+        });
+
+    // Handle form submission
+    document.getElementById('churnPredictionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect form data
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Predicting...';
+
+        // Send prediction request
+        fetch('/api/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            // Update prediction results
+            document.getElementById('svmConfidence').style.width = result.svm_confidence + '%';
+            document.getElementById('lstmConfidence').style.width = result.lstm_confidence + '%';
+            document.getElementById('ensembleConfidence').style.width = result.ensemble_confidence + '%';
+            
+            document.getElementById('svmConfidenceText').textContent = result.svm_confidence.toFixed(1);
+            document.getElementById('lstmConfidenceText').textContent = result.lstm_confidence.toFixed(1);
+            document.getElementById('ensembleConfidenceText').textContent = result.ensemble_confidence.toFixed(1);
+            
+            const finalPrediction = document.getElementById('finalPrediction');
+            finalPrediction.textContent = result.prediction;
+            finalPrediction.className = 'display-4 mb-3 ' + 
+                (result.prediction === 'Churn' ? 'text-danger' : 'text-success');
+
+            // Show results
+            document.getElementById('predictionResult').classList.add('show');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while making the prediction. Please try again.');
+        })
+        .finally(() => {
+            // Reset button state
+            submitButton.disabled = false;
+            submitButton.textContent = 'Predict Churn';
+        });
+    });
+});
+</script>
+{% endblock %} 

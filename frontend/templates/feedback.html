@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback - Customer Churn Prediction{% endblock %}
+
+{% block extra_css %}
+<style>
+    .feedback-form {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .form-section {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    .rating-group {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    .rating-option {
+        flex: 1;
+        text-align: center;
+        padding: 1rem;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .rating-option:hover {
+        border-color: var(--secondary-color);
+        background: #f8f9fa;
+    }
+    .rating-option.selected {
+        border-color: var(--secondary-color);
+        background: var(--secondary-color);
+        color: white;
+    }
+    .feedback-success {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+        background: #d4edda;
+        border-radius: 8px;
+        margin-top: 2rem;
+    }
+    .feedback-success.show {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Feedback Form</h1>
+    
+    <div class="feedback-form">
+        <form id="feedbackForm">
+            <!-- User Information -->
+            <div class="form-section">
+                <h3>Your Information</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="organization">Organization</label>
+                            <input type="text" class="form-control" id="organization" name="organization">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <input type="text" class="form-control" id="role" name="role">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prediction Experience -->
+            <div class="form-section">
+                <h3>Prediction Experience</h3>
+                <div class="form-group">
+                    <label>How would you rate the accuracy of the predictions?</label>
+                    <div class="rating-group">
+                        <div class="rating-option" data-rating="1">
+                            <div class="h4 mb-2">1</div>
+                            <div>Poor</div>
+                        </div>
+                        <div class="rating-option" data-rating="2">
+                            <div class="h4 mb-2">2</div>
+                            <div>Fair</div>
+                        </div>
+                        <div class="rating-option" data-rating="3">
+                            <div class="h4 mb-2">3</div>
+                            <div>Good</div>
+                        </div>
+                        <div class="rating-option" data-rating="4">
+                            <div class="h4 mb-2">4</div>
+                            <div>Very Good</div>
+                        </div>
+                        <div class="rating-option" data-rating="5">
+                            <div class="h4 mb-2">5</div>
+                            <div>Excellent</div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="predictionRating" id="predictionRating" required>
+                </div>
+
+                <div class="form-group mt-4">
+                    <label>How would you rate the user interface?</label>
+                    <div class="rating-group">
+                        <div class="rating-option" data-rating="1">
+                            <div class="h4 mb-2">1</div>
+                            <div>Poor</div>
+                        </div>
+                        <div class="rating-option" data-rating="2">
+                            <div class="h4 mb-2">2</div>
+                            <div>Fair</div>
+                        </div>
+                        <div class="rating-option" data-rating="3">
+                            <div class="h4 mb-2">3</div>
+                            <div>Good</div>
+                        </div>
+                        <div class="rating-option" data-rating="4">
+                            <div class="h4 mb-2">4</div>
+                            <div>Very Good</div>
+                        </div>
+                        <div class="rating-option" data-rating="5">
+                            <div class="h4 mb-2">5</div>
+                            <div>Excellent</div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="uiRating" id="uiRating" required>
+                </div>
+            </div>
+
+            <!-- Detailed Feedback -->
+            <div class="form-section">
+                <h3>Detailed Feedback</h3>
+                <div class="form-group">
+                    <label for="predictionFeedback">What aspects of the prediction system worked well?</label>
+                    <textarea class="form-control" id="predictionFeedback" name="predictionFeedback" rows="3"></textarea>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="improvementFeedback">What aspects could be improved?</label>
+                    <textarea class="form-control" id="improvementFeedback" name="improvementFeedback" rows="3"></textarea>
+                </div>
+                <div class="form-group mt-3">
+                    <label for="additionalFeedback">Any additional comments or suggestions?</label>
+                    <textarea class="form-control" id="additionalFeedback" name="additionalFeedback" rows="3"></textarea>
+                </div>
+            </div>
+
+            <!-- Feature Requests -->
+            <div class="form-section">
+                <h3>Feature Requests</h3>
+                <div class="form-group">
+                    <label>Which additional features would you find useful?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="featureRequests" value="customReports" id="customReports">
+                        <label class="form-check-label" for="customReports">
+                            Custom Reports Generation
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="featureRequests" value="batchPredictions" id="batchPredictions">
+                        <label class="form-check-label" for="batchPredictions">
+                            Batch Predictions
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="featureRequests" value="apiAccess" id="apiAccess">
+                        <label class="form-check-label" for="apiAccess">
+                            API Access
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="featureRequests" value="moreVisualizations" id="moreVisualizations">
+                        <label class="form-check-label" for="moreVisualizations">
+                            More Data Visualizations
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Submit Feedback</button>
+            </div>
+        </form>
+
+        <!-- Success Message -->
+        <div id="feedbackSuccess" class="feedback-success">
+            <h3 class="text-success mb-3">Thank You for Your Feedback!</h3>
+            <p>Your feedback has been successfully submitted. We appreciate your time and input in helping us improve our service.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle rating selection
+    document.querySelectorAll('.rating-group').forEach(group => {
+        const options = group.querySelectorAll('.rating-option');
+        const input = group.parentElement.querySelector('input[type="hidden"]');
+        
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                options.forEach(opt => opt.classList.remove('selected'));
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                // Update hidden input value
+                input.value = this.dataset.rating;
+            });
+        });
+    });
+
+    // Handle form submission
+    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect form data
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+            if (key === 'featureRequests') {
+                if (!data[key]) data[key] = [];
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
+        });
+
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+        // Send feedback
+        fetch('/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            // Show success message
+            document.getElementById('feedbackSuccess').classList.add('show');
+            // Reset form
+            this.reset();
+            // Remove selected class from all rating options
+            document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('selected'));
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting feedback. Please try again.');
+        })
+        .finally(() => {
+            // Reset button state
+            submitButton.disabled = false;
+            submitButton.textContent = 'Submit Feedback';
+        });
+    });
+});
+</script>
+{% endblock %} 

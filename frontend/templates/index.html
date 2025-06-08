@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Customer Churn Prediction{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1>Understanding Customer Churn</h1>
+        <p class="lead">Empowering businesses with predictive analytics to retain valuable customers</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">What is Customer Churn?</h2>
+                    <p class="card-text">
+                        Customer churn, also known as customer attrition or customer turnover, refers to the phenomenon where customers stop doing business with a company or service. In today's competitive business landscape, understanding and predicting customer churn has become crucial for maintaining sustainable growth and profitability.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Why is Churn Prediction Important?</h2>
+                    <p class="card-text">
+                        The importance of churn prediction cannot be overstated in modern business operations. Here's why:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <strong>Cost Efficiency:</strong> Acquiring new customers is significantly more expensive than retaining existing ones. Studies show that acquiring a new customer can cost 5-25 times more than retaining an existing one.
+                        </li>
+                        <li class="mb-3">
+                            <strong>Revenue Impact:</strong> A 5% increase in customer retention can lead to a 25-95% increase in profits, according to research by Bain & Company.
+                        </li>
+                        <li class="mb-3">
+                            <strong>Business Growth:</strong> Loyal customers not only provide steady revenue but also act as brand ambassadors, bringing in new customers through referrals.
+                        </li>
+                        <li class="mb-3">
+                            <strong>Competitive Advantage:</strong> Understanding churn patterns helps businesses identify and address weaknesses in their service or product offerings before competitors do.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">The Power of Predictive Analytics</h2>
+                    <p class="card-text">
+                        Modern businesses are leveraging advanced machine learning techniques to predict customer churn before it happens. Our system combines two powerful approaches:
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="h5">Support Vector Machine (SVM)</h3>
+                                    <p>An advanced machine learning algorithm that excels at finding patterns in complex datasets, helping identify customers at risk of churning.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="h5">Long Short-Term Memory (LSTM)</h3>
+                                    <p>A sophisticated neural network that can capture complex temporal patterns in customer behavior, providing deeper insights into churn prediction.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Key Factors in Customer Churn</h2>
+                    <p class="card-text">
+                        Several factors can influence customer churn, including:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">• Service quality and reliability</li>
+                        <li class="mb-2">• Customer support effectiveness</li>
+                        <li class="mb-2">• Pricing and value perception</li>
+                        <li class="mb-2">• Competitor offerings and market changes</li>
+                        <li class="mb-2">• Customer engagement and satisfaction</li>
+                        <li class="mb-2">• Technical issues and product usability</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Our Solution</h2>
+                    <p class="card-text">
+                        Our customer churn prediction system combines advanced machine learning algorithms with comprehensive data analysis to help businesses:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">• Identify at-risk customers before they churn</li>
+                        <li class="mb-3">• Understand the key factors driving customer attrition</li>
+                        <li class="mb-3">• Develop targeted retention strategies</li>
+                        <li class="mb-3">• Make data-driven decisions to improve customer satisfaction</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="/predict" class="btn btn-primary btn-lg">Try Our Predictor</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
